@@ -4,9 +4,31 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // The `/api/products` endpoint
 
 // get all products
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
+  try {
+    const productData = await Product.findAll({
+      // JOIN with Category and ProductTag
+      include: [
+        { 
+          model: Category 
+        },
+        { 
+          model: Tag, 
+          through: {
+            model: ProductTag,
+            // Hides the columns from ProductTag
+            // The end user doesn't need to know the exact values in this table
+            attributes: [],
+          }
+        }
+      ]
+    })
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // get one product
@@ -22,6 +44,7 @@ router.post('/', (req, res) => {
       product_name: "Basketball",
       price: 200.00,
       stock: 3,
+      category_id: 2,
       tagIds: [1, 2, 3, 4]
     }
   */
@@ -49,6 +72,15 @@ router.post('/', (req, res) => {
 
 // update product
 router.put('/:id', (req, res) => {
+  /* req.body should look like this...
+    {
+      product_name: "Basketball",
+      price: 200.00,
+      stock: 3,
+      category_id: 2,
+      tagIds: [1, 2, 3, 4]
+    }
+  */
   // update product data
   Product.update(req.body, {
     where: {

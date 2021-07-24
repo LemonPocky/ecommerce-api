@@ -32,7 +32,7 @@ Product.init(
       },
     },
     // stock INTEGER NOT NULL DEFAULT 10
-    product_name: {
+    stock: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 10,
