@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
             model: ProductTag,
             // Hides the columns from ProductTag
             // The end user doesn't need to know the exact values in this table
+            // TODO: Shouldn't make assumptions... is this ok?
             attributes: [],
           }
         }
